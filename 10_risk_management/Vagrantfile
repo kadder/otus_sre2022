@@ -10,10 +10,11 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: "mkdir /root/.ssh/ && cat /vagrant/ansible.pub >> /root/.ssh/authorized_keys && cat /vagrant/ansible.pub >> /home/vagrant/.ssh/authorized_keys"
   config.ssh.username = "vagrant"
 
-  config.vm.define "funkwhale01" do |funkwhale01|
-    funkwhale01.vm.network :forwarded_port, guest: 22, host: 2202, id: "ssh"
-    funkwhale01.vm.network :forwarded_port, guest: 80, host: 8002, id: "reverse-poxy"
-    funkwhale01.vm.hostname = "funkwhale01.debvm"
+  config.vm.define "h1" do |h1|
+    h1.vm.network :forwarded_port, guest: 22, host: 2202, id: "ssh"
+    h1.vm.network :forwarded_port, guest: 5000, host: 5000, id: "flask"
+    h1.vm.network "private_network", ip: '192.168.200.101', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "cluster00"  
+    h1.vm.hostname = "h1.lab"
   end
 
 config.vm.provision "ansible" do |ansible|
